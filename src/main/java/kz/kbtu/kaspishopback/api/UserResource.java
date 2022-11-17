@@ -100,9 +100,10 @@ public class UserResource {
         return ResponseEntity.ok().body(productService.getProducts());
     }
 
-    @GetMapping("/product/detail")
-    public ResponseEntity<?> productDetail() {
-        return null;
+    // todo нужно протестить
+    @GetMapping("/product/{id}/detail")
+    public ResponseEntity<?> productDetail(@PathVariable Long id) {
+        return ResponseEntity.ok().body(productService.getProduct(id));
     }
 }
 
