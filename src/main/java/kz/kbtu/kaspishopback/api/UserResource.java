@@ -14,6 +14,7 @@ import kz.kbtu.kaspishopback.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -47,6 +48,8 @@ public class UserResource {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/user/save").toUriString());
         return ResponseEntity.created(uri).body(userService.saveUser(user));
     }
+
+    //todo implement "user/register" endpoint(Request) here
 
     @PostMapping("/role/save")
     public ResponseEntity<KsRole> saveRole(@RequestBody KsRole role) {
@@ -95,31 +98,38 @@ public class UserResource {
 
     }
 
-
+// todo move to ProductResource  ->
     @GetMapping("/product/list")
     public ResponseEntity<List<KsProduct>> productList() {
         return ResponseEntity.ok().body(productService.getProducts());
     }
 
-    // todo нужно протестить
     @GetMapping("/product/{id}/detail")
     public ResponseEntity<?> productDetail(@PathVariable Long id) {
         return ResponseEntity.ok().body(productService.getProduct(id));
     }
 
     @PostMapping("/product/save")
-    public ResponseEntity<KsProduct> create(@RequestBody ProductDto product){
+    public ResponseEntity<KsProduct> create(@RequestBody ProductDto product) {
+        System.out.println(product.getDescription());
         KsProduct newProduct = new KsProduct(null,
                 product.getManufacturer(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                null);
-        return ResponseEntity.ok().body(newProduct);
+                userService.getUser((String)
+                        SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+        );
+
+        productService.save(newProduct);
+        return ResponseEntity.ok(newProduct);
     }
+// todo <- до отсюда
+
 }
 
 
+//todo RoleToUserForm перенести отсюда
 @Data
 class RoleToUserForm {
     private String username;
