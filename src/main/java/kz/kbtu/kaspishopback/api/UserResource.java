@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kz.kbtu.kaspishopback.domain.KsProduct;
 import kz.kbtu.kaspishopback.domain.KsRole;
 import kz.kbtu.kaspishopback.domain.KsUser;
+import kz.kbtu.kaspishopback.dto.ProductDto;
 import kz.kbtu.kaspishopback.service.ProductService;
 import kz.kbtu.kaspishopback.service.UserService;
 import lombok.Data;
@@ -104,6 +105,17 @@ public class UserResource {
     @GetMapping("/product/{id}/detail")
     public ResponseEntity<?> productDetail(@PathVariable Long id) {
         return ResponseEntity.ok().body(productService.getProduct(id));
+    }
+
+    @PostMapping("/product/save")
+    public ResponseEntity<KsProduct> create(@RequestBody ProductDto product){
+        KsProduct newProduct = new KsProduct(null,
+                product.getManufacturer(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                null);
+        return ResponseEntity.ok().body(newProduct);
     }
 }
 

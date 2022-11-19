@@ -11,4 +11,5 @@ public interface UserService {
     void addRoleToUser(String username, String roleName);
     KsUser getUser(String username);
     List<KsUser> getUsers();
+    KsUser getCurrentUser();
 }

@@ -78,4 +78,11 @@ public class UserServiceBean implements UserService, UserDetailsService {
         log.info("Fetching all user");
         return userRepo.findAll();
     }
+
+    @Override
+    public KsUser getCurrentUser() {
+        return null;
+    }
+
+
 }
