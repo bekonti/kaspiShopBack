@@ -14,7 +14,6 @@ import kz.kbtu.kaspishopback.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -22,11 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import kz.kbtu.kaspishopback.dto.*;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -49,7 +46,10 @@ public class UserResource {
         return ResponseEntity.created(uri).body(userService.saveUser(user));
     }
 
-    //todo implement "user/register" endpoint(Request) here
+    @PostMapping("/user/register")
+    public ResponseEntity<KsUser> register(@RequestBody KsUser user){
+        return ResponseEntity.ok(userService.saveUser(new KsUser(null, user.getName(), user.getUsername(), user.getPassword(), new ArrayList<>())));
+    }
 
     @PostMapping("/role/save")
     public ResponseEntity<KsRole> saveRole(@RequestBody KsRole role) {
@@ -58,7 +58,7 @@ public class UserResource {
     }
 
     @PostMapping("role/addtouser")
-    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm role) {
+    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserFrom role) {
         userService.addRoleToUser(role.getUsername(), role.getRolename());
         return ResponseEntity.ok().build();
     }
@@ -98,40 +98,4 @@ public class UserResource {
 
     }
 
-// todo move to ProductResource  ->
-    @GetMapping("/product/list")
-    public ResponseEntity<List<KsProduct>> productList() {
-        return ResponseEntity.ok().body(productService.getProducts());
-    }
-
-    @GetMapping("/product/{id}/detail")
-    public ResponseEntity<?> productDetail(@PathVariable Long id) {
-        return ResponseEntity.ok().body(productService.getProduct(id));
-    }
-
-    @PostMapping("/product/save")
-    public ResponseEntity<KsProduct> create(@RequestBody ProductDto product) {
-        System.out.println(product.getDescription());
-        KsProduct newProduct = new KsProduct(null,
-                product.getManufacturer(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                userService.getUser((String)
-                        SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-        );
-
-        productService.save(newProduct);
-        return ResponseEntity.ok(newProduct);
-    }
-// todo <- до отсюда
-
-}
-
-
-//todo RoleToUserForm перенести отсюда
-@Data
-class RoleToUserForm {
-    private String username;
-    private String rolename;
 }

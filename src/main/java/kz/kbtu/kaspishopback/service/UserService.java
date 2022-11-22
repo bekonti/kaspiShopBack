@@ -12,4 +12,5 @@ public interface UserService {
     KsUser getUser(String username);
     List<KsUser> getUsers();
     KsUser getCurrentUser();
+
 }
