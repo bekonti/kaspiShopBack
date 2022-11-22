@@ -9,18 +9,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class KsUser {
+@NoArgsConstructor
+@Data
+public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
-    private String username;
-    private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<KsRole> roles = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.EAGER)
+    private KsUser user;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private KsProduct wishList;
 }

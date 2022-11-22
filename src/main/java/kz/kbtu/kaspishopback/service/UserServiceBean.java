@@ -4,9 +4,12 @@ import kz.kbtu.kaspishopback.domain.KsRole;
 import kz.kbtu.kaspishopback.domain.KsUser;
 import kz.kbtu.kaspishopback.repo.RoleRepo;
 import kz.kbtu.kaspishopback.repo.UserRepo;
+import kz.kbtu.kaspishopback.security.SecurityConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -81,7 +84,7 @@ public class UserServiceBean implements UserService, UserDetailsService {
 
     @Override
     public KsUser getCurrentUser() {
-        return null;
+        return getUser((String)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
 

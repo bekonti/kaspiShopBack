@@ -8,4 +8,5 @@ public interface ProductService {
     List<KsProduct> getProducts();
     KsProduct getProduct(Long id);
     void save(KsProduct product);
+    void addWishList(long ProductId);
 }

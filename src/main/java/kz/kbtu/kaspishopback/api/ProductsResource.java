@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 
 
+
 import java.util.List;
 
 @RestController
@@ -30,6 +31,12 @@ public class ProductsResource {
     @GetMapping("/product/{id}/detail")
     public ResponseEntity<?> productDetail(@PathVariable Long id) {
         return ResponseEntity.ok().body(productService.getProduct(id));
+    }
+
+    @PostMapping("/product/addTowishList")
+    public ResponseEntity<?> addWishList(@RequestBody ProductDto dto){
+        productService.addWishList(dto.getProductId());
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/product/save")
