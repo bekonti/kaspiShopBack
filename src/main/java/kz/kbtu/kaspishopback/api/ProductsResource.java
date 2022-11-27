@@ -1,18 +1,16 @@
 package kz.kbtu.kaspishopback.api;
 
+import kz.kbtu.kaspishopback.domain.Basket;
 import kz.kbtu.kaspishopback.domain.KsProduct;
 
+import kz.kbtu.kaspishopback.dto.BasketDto;
 import kz.kbtu.kaspishopback.dto.ProductDto;
 import kz.kbtu.kaspishopback.service.ProductService;
 import kz.kbtu.kaspishopback.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import kz.kbtu.kaspishopback.service.ProductService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-
-
 
 
 import java.util.List;
@@ -34,7 +32,7 @@ public class ProductsResource {
     }
 
     @PostMapping("/product/addTowishList")
-    public ResponseEntity<?> addWishList(@RequestBody ProductDto dto){
+    public ResponseEntity<?> addWishList(@RequestBody ProductDto dto) {
         productService.addWishList(dto.getProductId());
         return ResponseEntity.ok(null);
     }
@@ -53,5 +51,24 @@ public class ProductsResource {
 
         productService.save(newProduct);
         return ResponseEntity.ok(newProduct);
+    }
+
+    @PostMapping("/product/basket/createOrUpdate")
+    public ResponseEntity<Basket> createOrUpdate(@RequestBody Basket busket) {
+        return ResponseEntity.ok(productService.createOrUpdateBasket(busket));
+    }
+
+    @PostMapping("/product/basket/remove")
+    public ResponseEntity<Basket> remove(@RequestBody Long busketId) {
+        productService.removeFromBasket(busketId);
+        return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/product/basket/list")
+    public ResponseEntity<BasketDto> getBasket() {
+        return ResponseEntity.ok(BasketDto.builder()
+                .baskets(productService.getBaskets())
+                .total(99)
+                .build());
     }
 }
