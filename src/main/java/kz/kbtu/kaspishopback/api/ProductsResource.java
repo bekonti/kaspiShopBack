@@ -1,6 +1,7 @@
 package kz.kbtu.kaspishopback.api;
 
 import kz.kbtu.kaspishopback.domain.Basket;
+import kz.kbtu.kaspishopback.domain.CommentForProduct;
 import kz.kbtu.kaspishopback.domain.KsProduct;
 
 import kz.kbtu.kaspishopback.dto.BasketDto;
@@ -59,7 +60,7 @@ public class ProductsResource {
     }
 
     @PostMapping("/product/basket/remove")
-    public ResponseEntity<Basket> remove(@RequestBody Long busketId) {
+    public ResponseEntity<Basket> removeBasket(@RequestBody Long busketId) {
         productService.removeFromBasket(busketId);
         return ResponseEntity.ok(null);
     }
@@ -71,4 +72,21 @@ public class ProductsResource {
                 .total(99)
                 .build());
     }
+
+    @GetMapping("/product/{id}/comments")
+    public ResponseEntity<List<CommentForProduct>> getCommentsByProductId(@PathVariable Long id){
+        return ResponseEntity.ok().body(productService.getCommentsByProductId(id));
+    }
+
+    @PostMapping("/product/comment/add")
+    public ResponseEntity<CommentForProduct> add(@RequestBody CommentForProduct newComment){
+        return ResponseEntity.ok().body(productService.addComment(newComment));
+    }
+
+    @PostMapping("product/comment/remove")
+    public ResponseEntity<?> removeComment(@RequestBody Long id){
+        productService.deleteComment(id);
+        return (ResponseEntity<?>) ResponseEntity.ok();
+    }
+
 }

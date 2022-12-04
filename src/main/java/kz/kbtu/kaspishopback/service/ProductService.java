@@ -1,6 +1,7 @@
 package kz.kbtu.kaspishopback.service;
 
 import kz.kbtu.kaspishopback.domain.Basket;
+import kz.kbtu.kaspishopback.domain.CommentForProduct;
 import kz.kbtu.kaspishopback.domain.KsProduct;
 import kz.kbtu.kaspishopback.dto.BasketDto;
 
@@ -16,4 +17,7 @@ public interface ProductService {
     void removeFromBasket(Long busketId);
     List<Basket> getBaskets();
     BasketDto getBaskets1();
+    CommentForProduct addComment(CommentForProduct newComment);
+    List<CommentForProduct> getCommentsByProductId(Long id);
+    void deleteComment(Long id);
 }

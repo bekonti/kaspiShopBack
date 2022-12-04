@@ -1,11 +1,9 @@
 package kz.kbtu.kaspishopback.service;
 
-import kz.kbtu.kaspishopback.domain.Basket;
-import kz.kbtu.kaspishopback.domain.KsProduct;
-import kz.kbtu.kaspishopback.domain.KsUser;
-import kz.kbtu.kaspishopback.domain.WishList;
+import kz.kbtu.kaspishopback.domain.*;
 import kz.kbtu.kaspishopback.dto.BasketDto;
 import kz.kbtu.kaspishopback.repo.BasketRepo;
+import kz.kbtu.kaspishopback.repo.CommentRepo;
 import kz.kbtu.kaspishopback.repo.ProductRepo;
 import kz.kbtu.kaspishopback.repo.WishListRepo;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +22,7 @@ public class ProductServiceBean implements ProductService {
     private final UserService userService;
     private final WishListRepo wishListRepo;
     private final BasketRepo basketRepo;
+    private final CommentRepo commentRepo;
 
     @Override
     public List<KsProduct> getProducts() {
@@ -43,7 +42,7 @@ public class ProductServiceBean implements ProductService {
     @Override
     public void addWishList(long ProductId) {
         KsUser user = userService.getCurrentUser();
-        KsProduct product= getProduct(ProductId);
+        KsProduct product = getProduct(ProductId);
         wishListRepo.save(new WishList(null, user, product));
     }
 
@@ -54,10 +53,7 @@ public class ProductServiceBean implements ProductService {
 
     @Override
     public Basket createOrUpdateBasket(Basket basket) {
-        Basket fromDb = basketRepo.findById(basket.getId()).orElse(null);
-        if(fromDb==null){
-            basketRepo.save(basket);
-        }
+        Basket fromDb = basketRepo.findById(basket.getId()).orElse(new Basket());
         fromDb.setCount(basket.getCount());
         fromDb.setFinished(basket.isFinished());
         basketRepo.save(fromDb);
@@ -66,10 +62,7 @@ public class ProductServiceBean implements ProductService {
 
     @Override
     public void removeFromBasket(Long basketId) {
-        Basket fromDb = basketRepo.findById(basketId).orElse(null);
-        if(fromDb!=null){
-            basketRepo.deleteById(basketId);
-        }
+        basketRepo.deleteById(basketId);
     }
 
     @Override
@@ -80,5 +73,22 @@ public class ProductServiceBean implements ProductService {
     @Override
     public BasketDto getBaskets1() {
         return null;
+    }
+
+    @Override
+    public CommentForProduct addComment(CommentForProduct newComment) {
+        newComment.setAuthor(userService.getCurrentUser());
+        return commentRepo.save(newComment);
+    }
+
+    @Override
+    public List<CommentForProduct> getCommentsByProductId(Long id) {
+        return commentRepo.findAllByProductIdEquals(id);
+
+    }
+
+    @Override
+    public void deleteComment(Long id) {
+        commentRepo.deleteById(id);
     }
 }
