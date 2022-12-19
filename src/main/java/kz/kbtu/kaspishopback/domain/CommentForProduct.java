@@ -21,5 +21,11 @@ public class CommentForProduct  {
     @ManyToOne
     private KsProduct productId;
 
+    @Column(name= "comment")
+    private String comment;
+
+    @Column(name= "rate")
+    private int rate;
+
 
 }
